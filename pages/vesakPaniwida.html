@@ -1,0 +1,913 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" type="text/css" href="hexagons.css">
+    <link rel="shortcut icon" href="../img/title_icon.png" />
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: sans-serif;
+            background-image: url("../img/bg_vesakPaniwida.png");
+            background-size: 100% 100%;
+        }
+
+
+
+        .grid {
+            margin-left: 10%;
+            margin-right: 11%;
+            /* margin-top: 3%; */
+        }
+
+        @media only screen and (min-width: 768px) and (min-width: 600px) {
+            .hex h1 {
+                font-size: 1.5em;
+            }
+         
+            .hex p {
+                font-size: 0.8em;
+            }
+
+        }
+        @media only screen and (min-width: 992px) and (max-width: 1230px)
+        {
+            .hex h1 {
+                font-size: 1.5em;
+            }
+         
+            .hex p {
+                font-size: 0.8em;
+            }
+
+
+        }
+
+        @media only screen and (min-width: 1200px) {
+            .hex h1 {
+                font-size: 2.5em;
+            }
+         
+            .hex p {
+                font-size: 1.5em;
+            }
+        }
+        @media only screen and (max-width: 620px) {
+
+            .grid {
+                margin-left: 0px;
+                margin-right: 0px;
+                /* margin-top: 3%; */
+            }
+
+            #title {
+                align-items: center;
+                width: 100%;
+                height: 100%;
+            }
+
+            body {
+                font-family: sans-serif;
+                background-image: url("../img/bg_vesakPaniwida.png");
+                background-size: cover;
+            }
+
+            #rotatedRectangle {
+                height: 278px !important;
+            }
+            .hex h1 {
+                font-size: 1.5em;
+            }
+         
+            .hex p {
+                font-size: 0.8em;
+            }
+
+
+        }
+
+        .borderSpam {
+            z-index: -1;
+        }
+
+
+
+        .box {
+            transform: translate(-3%, 7%);
+            background: #ffffffa6;
+            box-sizing: border-box;
+            overflow: hidden;
+            box-shadow: 0 20px 50px rgb(193 189 49);
+            border: 2px solid #ffc107;
+            color: white;
+
+        }
+
+        .box:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            /* left:-100%; */
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.1);
+            transition: 0.5s;
+            pointer-events: none;
+        }
+
+        .box:hover:before {
+            /* left:-50%; */
+            transform: skewX(-5deg);
+        }
+
+
+        .box .content {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            right: 15px;
+            bottom: 15px;
+            border: 1px solid #f0a591;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 5px 10px rgba(9, 0, 0, 0.5);
+
+        }
+
+        .box span {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: block;
+            box-sizing: border-box;
+
+        }
+
+        .box:hover {
+            opacity: 1;
+            background-color: rgb(226, 226, 238);
+        }
+
+        .box span:nth-child(1) {
+            transform: rotate(0deg);
+        }
+
+        .box span:nth-child(2) {
+            transform: rotate(90deg);
+        }
+
+        .box span:nth-child(3) {
+            transform: rotate(180deg);
+        }
+
+        .box span:nth-child(4) {
+            transform: rotate(270deg);
+        }
+
+        .box span:before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 2px;
+            background: #706ac3;
+            animation: animate 4s linear infinite;
+        }
+
+        @keyframes animate {
+            0% {
+                transform: scaleX(0);
+                transform-origin: left;
+            }
+
+            50% {
+                transform: scaleX(1);
+                transform-origin: left;
+            }
+
+            50.1% {
+                transform: scaleX(1);
+                transform-origin: right;
+
+            }
+
+            100% {
+                transform: scaleX(0);
+                transform-origin: right;
+
+            }
+        }
+
+
+
+        /* FOR MODAL */
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+        }
+
+        img {
+            display: block;
+        }
+
+        .gallery {
+            position: relative;
+            z-index: 2;
+            padding: 10px;
+            display: flex;
+            flex-flow: row wrap;
+            justify-content: space-between;
+            transition: all 0.5s ease-in-out;
+            transform: translateZ(0);
+        }
+
+        .gallery.pop {
+            filter: blur(10px);
+        }
+
+        .gallery figure {
+            flex-basis: 33.333%;
+            padding: 10px;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .gallery figure img {
+            width: 100%;
+            transition: all 0.3s ease-in-out;
+        }
+
+        .gallery figure figcaption {
+            display: none;
+        }
+
+        .popup {
+            position: fixed;
+            z-index: 2;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: #fff;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out 0.2s;
+        }
+
+        .popup.pop {
+            opacity: 1;
+            transition: opacity 0.2s ease-in-out 0s;
+        }
+
+        .popup.pop figure {
+            margin-top: 0;
+            opacity: 1;
+        }
+
+        .popup figure {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            transform-origin: 0 0;
+            margin-top: 30px;
+            opacity: 0;
+            animation: poppy 500ms linear both;
+        }
+
+        .popup figure img {
+            position: relative;
+            z-index: 2;
+        }
+
+        .popup figure figcaption {
+            position: absolute;
+            bottom: 50px;
+            background: linear-gradient(180deg, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.78));
+            z-index: 2;
+            width: 100%;
+            padding: 100px 20px 20px 20px;
+            color: #fff;
+            font-family: 'Open Sans', sans-serif;
+            font-size: 32px;
+        }
+
+        .popup figure figcaption small {
+            font-size: 11px;
+            display: block;
+            text-transform: uppercase;
+            margin-top: 12px;
+            text-indent: 3px;
+            opacity: 0.7;
+            letter-spacing: 1px;
+        }
+
+        .popup figure .shadow {
+            position: relative;
+            z-index: 1;
+            top: -56px;
+            margin: 0 auto;
+            background-position: center bottom;
+            background-repeat: no-repeat;
+            width: 98%;
+            height: 50px;
+            opacity: 0.9;
+            filter: blur(16px) contrast(1.5);
+            transform: scale(0.95, -0.7);
+            transform-origin: center bottom;
+        }
+
+        .popup .close {
+            position: absolute;
+            z-index: 3;
+            top: 10px;
+            right: 10px;
+            width: 25px;
+            height: 25px;
+            cursor: pointer;
+            background: url(#close);
+            border-radius: 25px;
+            background: rgba(0, 0, 0, .1);
+            box-shadow: 0 0 3px rgba(0, 0, 0, .2);
+        }
+
+        .popup .close svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        .popup {
+            background-color: transparent;
+            backdrop-filter: blur(7px);
+        }
+
+        @keyframes poppy {
+            0% {
+                transform: matrix3d(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+            }
+
+            3.4% {
+                transform: matrix3d(0.316, 0, 0, 0, 0, 0.407, 0, 0, 0, 0, 1, 0, -94.672, -91.573, 0, 1);
+            }
+
+            4.3% {
+                transform: matrix3d(0.408, 0, 0, 0, 0, 0.54, 0, 0, 0, 0, 1, 0, -122.527, -121.509, 0, 1);
+            }
+
+            4.7% {
+                transform: matrix3d(0.45, 0, 0, 0, 0, 0.599, 0, 0, 0, 0, 1, 0, -134.908, -134.843, 0, 1);
+            }
+
+            6.81% {
+                transform: matrix3d(0.659, 0, 0, 0, 0, 0.893, 0, 0, 0, 0, 1, 0, -197.77, -200.879, 0, 1);
+            }
+
+            8.61% {
+                transform: matrix3d(0.82, 0, 0, 0, 0, 1.097, 0, 0, 0, 0, 1, 0, -245.972, -246.757, 0, 1);
+            }
+
+            9.41% {
+                transform: matrix3d(0.883, 0, 0, 0, 0, 1.168, 0, 0, 0, 0, 1, 0, -265.038, -262.804, 0, 1);
+            }
+
+            10.21% {
+                transform: matrix3d(0.942, 0, 0, 0, 0, 1.226, 0, 0, 0, 0, 1, 0, -282.462, -275.93, 0, 1);
+            }
+
+            12.91% {
+                transform: matrix3d(1.094, 0, 0, 0, 0, 1.328, 0, 0, 0, 0, 1, 0, -328.332, -298.813, 0, 1);
+            }
+
+            13.61% {
+                transform: matrix3d(1.123, 0, 0, 0, 0, 1.332, 0, 0, 0, 0, 1, 0, -336.934, -299.783, 0, 1);
+            }
+
+            14.11% {
+                transform: matrix3d(1.141, 0, 0, 0, 0, 1.331, 0, 0, 0, 0, 1, 0, -342.273, -299.395, 0, 1);
+            }
+
+            17.22% {
+                transform: matrix3d(1.205, 0, 0, 0, 0, 1.252, 0, 0, 0, 0, 1, 0, -361.606, -281.592, 0, 1);
+            }
+
+            17.52% {
+                transform: matrix3d(1.208, 0, 0, 0, 0, 1.239, 0, 0, 0, 0, 1, 0, -362.348, -278.88, 0, 1);
+            }
+
+            18.72% {
+                transform: matrix3d(1.212, 0, 0, 0, 0, 1.187, 0, 0, 0, 0, 1, 0, -363.633, -267.15, 0, 1);
+            }
+
+            21.32% {
+                transform: matrix3d(1.196, 0, 0, 0, 0, 1.069, 0, 0, 0, 0, 1, 0, -358.864, -240.617, 0, 1);
+            }
+
+            24.32% {
+                transform: matrix3d(1.151, 0, 0, 0, 0, 0.96, 0, 0, 0, 0, 1, 0, -345.164, -216.073, 0, 1);
+            }
+
+            25.23% {
+                transform: matrix3d(1.134, 0, 0, 0, 0, 0.938, 0, 0, 0, 0, 1, 0, -340.193, -210.948, 0, 1);
+            }
+
+            28.33% {
+                transform: matrix3d(1.075, 0, 0, 0, 0, 0.898, 0, 0, 0, 0, 1, 0, -322.647, -202.048, 0, 1);
+            }
+
+            29.03% {
+                transform: matrix3d(1.063, 0, 0, 0, 0, 0.897, 0, 0, 0, 0, 1, 0, -318.884, -201.771, 0, 1);
+            }
+
+            29.93% {
+                transform: matrix3d(1.048, 0, 0, 0, 0, 0.899, 0, 0, 0, 0, 1, 0, -314.277, -202.202, 0, 1);
+            }
+
+            35.54% {
+                transform: matrix3d(0.979, 0, 0, 0, 0, 0.962, 0, 0, 0, 0, 1, 0, -293.828, -216.499, 0, 1);
+            }
+
+            36.74% {
+                transform: matrix3d(0.972, 0, 0, 0, 0, 0.979, 0, 0, 0, 0, 1, 0, -291.489, -220.242, 0, 1);
+            }
+
+            39.44% {
+                transform: matrix3d(0.962, 0, 0, 0, 0, 1.01, 0, 0, 0, 0, 1, 0, -288.62, -227.228, 0, 1);
+            }
+
+            41.04% {
+                transform: matrix3d(0.961, 0, 0, 0, 0, 1.022, 0, 0, 0, 0, 1, 0, -288.247, -229.999, 0, 1);
+            }
+
+            44.44% {
+                transform: matrix3d(0.966, 0, 0, 0, 0, 1.032, 0, 0, 0, 0, 1, 0, -289.763, -232.215, 0, 1);
+            }
+
+            52.15% {
+                transform: matrix3d(0.991, 0, 0, 0, 0, 1.006, 0, 0, 0, 0, 1, 0, -297.363, -226.449, 0, 1);
+            }
+
+            59.86% {
+                transform: matrix3d(1.006, 0, 0, 0, 0, 0.99, 0, 0, 0, 0, 1, 0, -301.813, -222.759, 0, 1);
+            }
+
+            61.66% {
+                transform: matrix3d(1.007, 0, 0, 0, 0, 0.991, 0, 0, 0, 0, 1, 0, -302.102, -222.926, 0, 1);
+            }
+
+            63.26% {
+                transform: matrix3d(1.007, 0, 0, 0, 0, 0.992, 0, 0, 0, 0, 1, 0, -302.171, -223.276, 0, 1);
+            }
+
+            75.28% {
+                transform: matrix3d(1.001, 0, 0, 0, 0, 1.003, 0, 0, 0, 0, 1, 0, -300.341, -225.696, 0, 1);
+            }
+
+            83.98% {
+                transform: matrix3d(0.999, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, -299.61, -225.049, 0, 1);
+            }
+
+            85.49% {
+                transform: matrix3d(0.999, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, -299.599, -224.94, 0, 1);
+            }
+
+            90.69% {
+                transform: matrix3d(0.999, 0, 0, 0, 0, 0.999, 0, 0, 0, 0, 1, 0, -299.705, -224.784, 0, 1);
+            }
+
+            100% {
+                transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, -300, -225, 0, 1);
+            }
+        }
+    </style>
+    <title>Brain Storm Vesak Kalapaya 2021</title>
+</head>
+
+<body>
+
+    <div class="container-fluid min-vh-100 padding d-flex flex-column">
+        <div class="row ">
+
+            <nav class="navbar navbar-expand-lg navbar-light justify-content-end">
+                <a class="navbar-brand" href="../index.html" style="width: 40px;"><img src="../img/home_icon.png"
+                        height="40px" width="40px"></a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02"
+                    aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse" style="flex-grow: inherit;" id="navbarTogglerDemo02">
+                    <ul class="navbar-nav mr-auto mt-2 mt-lg-0 ">
+                        <li class="nav-item" style="margin-right: 14px;">
+                            <div class="box">
+                                <span class="borderSpam"></span>
+                                <span class="borderSpam" id="rotatedRectangle"></span>
+                                <span class="borderSpam"></span>
+                                <span class="borderSpam" id="rotatedRectangle"></span>
+                                <a class="nav-link" href="./vesakThorana.html">වෙසක් තොරණ</a>
+                            </div>
+                        </li>
+                        <li class="nav-item" style="margin-right: 14px;">
+                            <div class="box" style="background-color: burlywood">
+                                <span class="borderSpam"></span>
+                                <span class="borderSpam" id="rotatedRectangle"></span>
+                                <span class="borderSpam"></span>
+                                <span class="borderSpam" id="rotatedRectangle"></span>
+                                <a class="nav-link" href="./vesakPaniwida.html">වෙසක් පණිවිඩ</a>
+                            </div>
+                        </li>
+                    
+                        <li class="nav-item" style="margin-right: 14px; pointer-events: auto">
+                            <div class="box">
+                                <span class="borderSpam"></span>
+                                <span class="borderSpam" id="rotatedRectangle"></span>
+                                <span class="borderSpam"></span>
+                                <span class="borderSpam" id="rotatedRectangle"></span>
+                                <a class="nav-link" href="./vesakNirmana.html">වෙසක් නිර්මාණ</a>
+                            </div>
+                        </li>
+                      
+                    </ul>
+                </div>
+            </nav>
+        </div>
+        <div class="row">
+            <div class="col-12 wrapper">
+                <!-- Demo header-->
+                <div class="row">
+                    <img id="title" src="../img/title_vesakPaniwida.png">
+                </div>
+
+
+                <div class="grid backgrd1">
+
+                    <ul id="hexGrid">
+                        <li class="hex">
+                            <div class="hexIn">
+                                <a class="hexLink" id="1" href="../imag/k.mp4">
+                                    <img src="../img/img2.png" alt="" />
+                                    <h1>වෙසක් තොරණ</h1>
+                                    <p>කෙමගුල සැමරිම</p>
+                                </a>
+                            </div>
+                        </li>
+                        <li class="hex">
+                            <div class="hexIn">
+                                <a class="hexLink" href="#">
+                                    <img src="https://farm5.staticflickr.com/4144/5053682635_b348b24698.jpg" alt="" />
+                                    <h1>This is a title</h1>
+                                    <p>Some sample text about the article this hexagon leads to</p>
+                                </a>
+                            </div>
+                        </li>
+                        <li class="hex">
+                            <div class="hexIn">
+                                <a class="hexLink" href="#">
+                                    <img src="https://farm3.staticflickr.com/2827/10384422264_d9c7299146.jpg" alt="" />
+                                    <h1>This is a title</h1>
+                                    <p>Some sample text about the article this hexagon leads to</p>
+                                </a>
+                            </div>
+                        </li>
+                        <li class="hex">
+                            <div class="hexIn">
+                                <a class="hexLink" href="#">
+                                    <img src="https://farm7.staticflickr.com/6217/6216951796_e50778255c.jpg" alt="" />
+                                    <h1>This is a title</h1>
+                                    <p>Some sample text about the article this hexagon leads to</p>
+                                </a>
+                            </div>
+                        </li>
+                        <li class="hex">
+                            <div class="hexIn">
+                                <a class="hexLink" href="#">
+                                    <img src="https://farm7.staticflickr.com/6083/6055581292_d94c2d90e3.jpg" alt="" />
+                                    <h1>This is a title</h1>
+                                    <p>Some sample text about the article this hexagon leads to</p>
+                                </a>
+                            </div>
+                        </li>
+                        <li class="hex">
+                            <div class="hexIn">
+                                <a class="hexLink" href="#">
+                                    <img src="https://farm3.staticflickr.com/2827/10384422264_d9c7299146.jpg" alt="" />
+                                    <h1>This is a title</h1>
+                                    <p>Some sample text about the article this hexagon leads to</p>
+                                </a>
+                            </div>
+                        </li>
+                        <li class="hex">
+                            <div class="hexIn">
+                                <a class="hexLink" href="#">
+                                    <img src="https://farm8.staticflickr.com/7187/6895047173_d4b1a0d798.jpg" alt="" />
+                                    <h1>This is a title</h1>
+                                    <p>Some sample text about the article this hexagon leads to</p>
+                                </a>
+                            </div>
+                        </li>
+                        <li class="hex">
+                            <div class="hexIn">
+                                <a class="hexLink" href="#">
+                                    <img src="https://farm4.staticflickr.com/3766/12953056854_b8cdf14f21.jpg" alt="" />
+                                    <h1>This is a title</h1>
+                                    <p>Some sample text about the article this hexagon leads to</p>
+                                </a>
+                            </div>
+                        </li>
+                        <li class="hex">
+                            <div class="hexIn">
+                                <a class="hexLink" href="#">
+                                    <img src="https://farm7.staticflickr.com/6139/5986939269_10721b8017.jpg" alt="" />
+                                    <h1>This is a title</h1>
+                                    <p>Some sample text about the article this hexagon leads to</p>
+                                </a>
+                            </div>
+                        </li>
+                        <li class="hex">
+                            <div class="hexIn">
+                                <a class="hexLink" href="#">
+                                    <img src="https://farm7.staticflickr.com/6139/5986939269_10721b8017.jpg" alt="" />
+                                    <h1>This is a title</h1>
+                                    <p>Some sample text about the article this hexagon leads to</p>
+                                </a>
+                            </div>
+                        </li>
+                        <li class="hex">
+                            <div class="hexIn">
+                                <a class="hexLink" href="#">
+                                    <img src="https://farm8.staticflickr.com/7163/6822904141_50277565c3.jpg" alt="" />
+                                    <h1>This is a title</h1>
+                                    <p>Some sample text about the article this hexagon leads to</p>
+                                </a>
+                            </div>
+                        </li>
+                        <li class="hex">
+                            <div class="hexIn">
+                                <a class="hexLink" href="#">
+                                    <img src="https://farm4.staticflickr.com/3771/13199704015_72aa535bd7.jpg" alt="" />
+                                    <h1>This is a title</h1>
+                                    <p>Some sample text about the article this hexagon leads to</p>
+                                </a>
+                            </div>
+                        </li>
+                        <li class="hex">
+                            <div class="hexIn">
+                                <a class="hexLink" href="#">
+                                    <img src="https://farm7.staticflickr.com/6083/6055581292_d94c2d90e3.jpg" alt="" />
+                                    <h1>This is a title</h1>
+                                    <p>Some sample text about the article this hexagon leads to</p>
+                                </a>
+                            </div>
+                        </li>
+                        <li class="hex">
+                            <div class="hexIn">
+                                <a class="hexLink" href="#">
+                                    <img src="https://farm8.staticflickr.com/7187/6895047173_d4b1a0d798.jpg" alt="" />
+                                    <h1>This is a title</h1>
+                                    <p>Some sample text about the article this hexagon leads to</p>
+                                </a>
+                            </div>
+                        </li>
+                        <li class="hex">
+                            <div class="hexIn">
+                                <a class="hexLink" href="#">
+                                    <img src="https://farm3.staticflickr.com/2878/10944255073_973d2cd25c.jpg" alt="" />
+                                    <h1>This is a title</h1>
+                                    <p>Some sample text about the article this hexagon leads to</p>
+                                </a>
+                            </div>
+                        </li>
+                        <li class="hex">
+                            <div class="hexIn">
+                                <a class="hexLink" href="#">
+                                    <img src="https://farm9.staticflickr.com/8461/8048823381_0fbc2d8efb.jpg" alt="" />
+                                    <h1>This is a title</h1>
+                                    <p>Some sample text about the article this hexagon leads to</p>
+                                </a>
+                            </div>
+                        </li>
+                        <li class="hex">
+                            <div class="hexIn">
+                                <a class="hexLink" href="#">
+                                    <img src="https://farm3.staticflickr.com/2827/10384422264_d9c7299146.jpg" alt="" />
+                                    <h1>This is a title</h1>
+                                    <p>Some sample text about the article this hexagon leads to</p>
+                                </a>
+                            </div>
+                        </li>
+                        <li class="hex">
+                            <div class="hexIn">
+                                <a class="hexLink" href="#">
+                                    <img src="https://farm7.staticflickr.com/6217/6216951796_e50778255c.jpg" alt="" />
+                                    <h1>This is a title</h1>
+                                    <p>Some sample text about the article this hexagon leads to</p>
+                                </a>
+                            </div>
+                        </li>
+                        <li class="hex">
+                            <div class="hexIn">
+                                <a class="hexLink" href="#">
+                                    <img src="https://farm7.staticflickr.com/6083/6055581292_d94c2d90e3.jpg" alt="" />
+                                    <h1>This is a title</h1>
+                                    <p>Some sample text about the article this hexagon leads to</p>
+                                </a>
+                            </div>
+                        </li>
+                        <li class="hex">
+                            <div class="hexIn">
+                                <a class="hexLink" href="#">
+                                    <img src="https://farm3.staticflickr.com/2827/10384422264_d9c7299146.jpg" alt="" />
+                                    <h1>This is a title</h1>
+                                    <p>Some sample text about the article this hexagon leads to</p>
+                                </a>
+                            </div>
+                        </li>
+                        <li class="hex">
+                            <div class="hexIn">
+                                <a class="hexLink" href="#">
+                                    <img src="https://farm8.staticflickr.com/7187/6895047173_d4b1a0d798.jpg" alt="" />
+                                    <h1>This is a title</h1>
+                                    <p>Some sample text about the article this hexagon leads to</p>
+                                </a>
+                            </div>
+                        </li>
+                        <li class="hex">
+                            <div class="hexIn">
+                                <a class="hexLink" href="#">
+                                    <img src="https://farm4.staticflickr.com/3766/12953056854_b8cdf14f21.jpg" alt="" />
+                                    <h1>This is a title</h1>
+                                    <p>Some sample text about the article this hexagon leads to</p>
+                                </a>
+                            </div>
+                        </li>
+                        <li class="hex">
+                            <div class="hexIn">
+                                <a class="hexLink" href="#">
+                                    <img src="https://farm7.staticflickr.com/6139/5986939269_10721b8017.jpg" alt="" />
+                                    <h1>This is a title</h1>
+                                    <p>Some sample text about the article this hexagon leads to</p>
+                                </a>
+                            </div>
+                        </li>
+                        <li class="hex">
+                            <div class="hexIn">
+                                <a class="hexLink" href="#">
+                                    <img src="https://farm7.staticflickr.com/6139/5986939269_10721b8017.jpg" alt="" />
+                                    <h1>This is a title</h1>
+                                    <p>Some sample text about the article this hexagon leads to</p>
+                                </a>
+                            </div>
+                        </li>
+                        <li class="hex">
+                            <div class="hexIn">
+                                <a class="hexLink" href="#">
+                                    <img src="https://farm8.staticflickr.com/7163/6822904141_50277565c3.jpg" alt="" />
+                                    <h1>This is a title</h1>
+                                    <p>Some sample text about the article this hexagon leads to</p>
+                                </a>
+                            </div>
+                        </li>
+                        <li class="hex">
+                            <div class="hexIn">
+                                <a class="hexLink" href="#">
+                                    <img src="https://farm4.staticflickr.com/3771/13199704015_72aa535bd7.jpg" alt="" />
+                                    <h1>This is a title</h1>
+                                    <p>Some sample text about the article this hexagon leads to</p>
+                                </a>
+                            </div>
+                        </li>
+                        <li class="hex">
+                            <div class="hexIn">
+                                <a class="hexLink" href="#">
+                                    <img src="https://farm7.staticflickr.com/6083/6055581292_d94c2d90e3.jpg" alt="" />
+                                    <h1>This is a title</h1>
+                                    <p>Some sample text about the article this hexagon leads to</p>
+                                </a>
+                            </div>
+                        </li>
+                        <li class="hex">
+                            <div class="hexIn">
+                                <a class="hexLink" href="#">
+                                    <img src="https://farm8.staticflickr.com/7187/6895047173_d4b1a0d798.jpg" alt="" />
+                                    <h1>This is a title</h1>
+                                    <p>Some sample text about the article this hexagon leads to</p>
+                                </a>
+                            </div>
+                        </li>
+                        <li class="hex">
+                            <div class="hexIn">
+                                <a class="hexLink" href="#">
+                                    <img src="https://farm3.staticflickr.com/2878/10944255073_973d2cd25c.jpg" alt="" />
+                                    <h1>This is a title</h1>
+                                    <p>Some sample text about the article this hexagon leads to</p>
+                                </a>
+                            </div>
+                        </li>
+                        <li class="hex">
+                            <div class="hexIn">
+                                <a class="hexLink" href="#">
+                                    <img src="https://farm9.staticflickr.com/8461/8048823381_0fbc2d8efb.jpg" alt="" />
+                                    <h1>This is a title</h1>
+                                    <p>Some sample text about the article this hexagon leads to</p>
+                                </a>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Option 1: Bootstrap Bundle with Popper -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+            crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+        <script src="https://masonry.desandro.com/masonry.pkgd.js"></script>
+        <script>
+            $(document).ready(function () {
+
+                var divHeight = $('.box').width();
+                $('span#rotatedRectangle').each(function () {
+
+                    var selfP = $(this)[0].offsetParent.offsetWidth;
+                    var self = $(this);
+
+                    self.height(selfP - 4);
+
+                });
+
+            });
+        </script>
+
+        <script>
+
+            popup = {
+                init: function () {
+                    $('.hexLink').click(function () {
+
+                        popup.open($(this), $(this).attr('id'));
+                    });
+
+                    $(document).on('click', '.popup img', function () {
+                        return false;
+                    }).on('click', '.popup', function () {
+                        popup.close($('figure'));
+                    })
+                },
+                open: function ($figure, elementId) {
+
+                    $('.gallery').addClass('pop');
+                    $popup = $('<div class="popup" />').appendTo($('body'));
+                    $fig = $('<figure style="width:29%; height:37%"></figure>').appendTo($('.popup'));
+                    $imag = $('<img>').appendTo($fig);
+                    $imag.attr('src', '../img/paniwida/' + elementId + '.jpg');
+                    $imag.css('width', '100%');
+                    $imag.css('height', '100%');
+                    $('<figcaption style="bottom:0px">Yellowstone National Park <small>United States</small></figcaption>').appendTo($fig);
+                    $bg = $('<div class="bg" />').appendTo($('.popup'));
+                    $close = $('<div class="close"><svg><use xlink:href="#close"></use></svg></div>').appendTo($fig);
+                    $shadow = $('<div class="shadow" />').appendTo($fig);
+                    src = $('img', $fig).attr('src');
+                    $shadow.css({ backgroundImage: 'url(' + src + ')' });
+                    $bg.css({ backgroundImage: 'url(' + src + ')' });
+
+                    setTimeout(function () {
+                        $('.popup').addClass('pop');
+                    }, 10);
+                },
+                close: function ($figure) {
+
+                    $('.gallery, .popup').removeClass('pop');
+                    setTimeout(function () {
+                        $('.popup').remove()
+                    }, 100);
+                }
+            }
+
+            popup.init()
+
+
+        </script>
+</body>
+
+</html>
